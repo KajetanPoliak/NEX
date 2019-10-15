@@ -73,7 +73,12 @@ getwd()  # find where are you at the moment
 
 # Define directory
 
+fileName <- 'path.txt'
+path = readChar(fileName, file.info(fileName)$size)
+setwd(path)
+
 # Read data
+
 dataframe <- read.table("Data/ukol_adamkajetan.csv",header=TRUE,sep=",")
 
-boxplot(Time~Order, dataframe)
+boxplot(Pocet~Jmeno, dataframe)
