@@ -78,13 +78,18 @@ path = readChar(fileName, file.info(fileName)$size)
 setwd(path)
 
 # Read data
-
-# Read data
 dat <- read.table("Data/ukol_adamkajetan.csv",header=TRUE,sep=",")
 
 names(dat)[names(dat)=="ï.¿Poradi"] <- "Poradi"
 dat$Kruh = factor(dat$Kruh)
 
+#### 2) ######
+#zakladni stat.
+summary(dat)
+summary(dat[which(dat$Jmeno =="adam"),])
+summary(dat[which(dat$Jmeno =="kajetan"),])
+
+#BOXPLOTS
 
 #boxplot(Pocet~Kruh, dat)
 #boxplot(Pocet~Poradi, dat)
@@ -95,20 +100,66 @@ dat$Kruh = factor(dat$Kruh)
 #boxplot(Pocet~Ruka+Jmeno, dat)
 
 require(ggplot2)
+require(gridExtra)
 
-# ploty oddelene nebo treba po 4 ??
-ggplot(dat, aes(x=Ruka, y=Pocet, color = Jmeno)) + 
+
+p1 <- ggplot(dat, aes(x=Ruka, y=Pocet, color = Jmeno)) + 
   geom_boxplot()
 
-ggplot(dat, aes(x=Kruh, y=Pocet, color = Jmeno)) + 
+p2 <- ggplot(dat, aes(x=Kruh, y=Pocet, color = Jmeno)) + 
   geom_boxplot()
 
-ggplot(dat, aes(x=Ruka, y=Pocet)) + 
+p3 <- ggplot(dat, aes(x=Ruka, y=Pocet)) + 
   geom_boxplot()
 
-ggplot(dat, aes(x=Jmeno, y=Pocet)) + 
+p4 <- ggplot(dat, aes(x=Jmeno, y=Pocet)) + 
   geom_boxplot()
 
-ggplot(dat, aes(x=Kruh, y=Pocet)) + 
+p5 <- ggplot(dat, aes(x=Kruh, y=Pocet)) + 
   geom_boxplot(outlier.colour="red", outlier.shape=3,
                outlier.size=4)
+
+grid.arrange(p1,p2,ncol=2)
+grid.arrange(p3,p4,ncol=2)
+p5
+
+ggplot(dd) +
+  aes(x = Jmeno, y = Pocet) +
+  geom_boxplot() +
+  facet_wrap(~Ruka)
+
+ggplot(dd) +
+  aes(x = Ruka, y = Pocet) +
+  geom_boxplot() +
+  facet_wrap(~Kruh)
+
+ggplot(dd) +
+  aes(x = Jmeno, y = Pocet) +
+  geom_boxplot() +
+  facet_wrap(~Kruh)
+
+#INFLUENCE PLOTS
+require(dplyr)
+
+dat %>%
+  group_by(Jmeno, Ruka) %>% 
+  summarise(grPocet = mean(Pocet)) -> dat2
+
+
+dat2 %>% 
+  ggplot() +
+  aes(x = Jmeno, y = grPocet, color = Ruka) +
+  geom_line(aes(group = Ruka)) +
+  geom_point()
+
+dat %>%
+  group_by(Jmeno, Kruh) %>% 
+  summarise(grPocet = mean(Pocet)) -> dat3
+
+
+dat3 %>% 
+  ggplot() +
+  aes(x = Jmeno, y = grPocet, color = Kruh) +
+  geom_line(aes(group = Kruh)) +
+  geom_point()
+
