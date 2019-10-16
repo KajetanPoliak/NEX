@@ -79,6 +79,36 @@ setwd(path)
 
 # Read data
 
-dataframe <- read.table("Data/ukol_adamkajetan.csv",header=TRUE,sep=",")
+# Read data
+dat <- read.table("Data/ukol_adamkajetan.csv",header=TRUE,sep=",")
 
-boxplot(Pocet~Jmeno, dataframe)
+names(dat)[names(dat)=="ï.¿Poradi"] <- "Poradi"
+dat$Kruh = factor(dat$Kruh)
+
+
+#boxplot(Pocet~Kruh, dat)
+#boxplot(Pocet~Poradi, dat)
+#boxplot(Pocet~Jmeno, dat)
+#boxplot(Pocet~Ruka, dat)
+#boxplot(Pocet~Kruh+Ruka, dat)
+#boxplot(Pocet~Jmeno+Kruh, dat)
+#boxplot(Pocet~Ruka+Jmeno, dat)
+
+require(ggplot2)
+
+# ploty oddelene nebo treba po 4 ??
+ggplot(dat, aes(x=Ruka, y=Pocet, color = Jmeno)) + 
+  geom_boxplot()
+
+ggplot(dat, aes(x=Kruh, y=Pocet, color = Jmeno)) + 
+  geom_boxplot()
+
+ggplot(dat, aes(x=Ruka, y=Pocet)) + 
+  geom_boxplot()
+
+ggplot(dat, aes(x=Jmeno, y=Pocet)) + 
+  geom_boxplot()
+
+ggplot(dat, aes(x=Kruh, y=Pocet)) + 
+  geom_boxplot(outlier.colour="red", outlier.shape=3,
+               outlier.size=4)
