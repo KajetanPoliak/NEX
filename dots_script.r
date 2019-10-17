@@ -264,13 +264,50 @@ var.test(three_cm$Pocet, five_cm$Pocet, ratio = 1, alternative = "two.sided", co
 # podminky t-testu: normalita, tj. histogram a shapiro-wilk test; uz jsme provadeli
 t.test(adam$Pocet, kajetan$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #nezamitame
 
+### toto bude lepsi nahradit pairwise testem
 t.test(dominant$Pocet, nondominant$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #nezamitame
 t.test(dominant$Pocet, joint$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #nezamitame
 t.test(nondominant$Pocet, joint$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #nezamitame
 
-t.test(one_cm$Pocet, three_cm$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = FALSE) 
+t.test(one_cm$Pocet, three_cm$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = FALSE) #var.equal = FALSE pouziva Welchovu aproximaci
 t.test(one_cm$Pocet, five_cm$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = FALSE) 
 t.test(three_cm$Pocet, five_cm$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #vsechny jasne zamitame
+### toto bude lepsi nahradit pairwise testem
+
+pairwise.t.test(dat$Pocet,dat$Ruka,p.adjust.method="bonferroni")
+pairwise.t.test(dat$Pocet,dat$Ruka,p.adjust.method="hochberg")
+
+pairwise.t.test(dat$Pocet,dat$Kruh,p.adjust.method="bonferroni")
+pairwise.t.test(dat$Pocet,dat$Kruh,p.adjust.method="hochberg")
 
 #Tukey HSD + Fisher LSD
+#Celkovy aov
+#Kruh bychom ani testovat, protoze jsou ruzne variance ve skupinach 1cm, 3cm, 5cm
+aov_celk =  aov(Pocet ~ Jmeno + Ruka + Kruh, data = dat) #ruka neni stat. vyznamna
+summary(aov_celk)
+LSD1 <- LSD.test(aov_celk, "Jmeno"); LSD1
+LSD2 <- LSD.test(aov_celk, "Ruka"); LSD2
+LSD3 <- LSD.test(aov_celk, "Kruh"); LSD3
+TukeyHSD(aov_celk, "Jmeno", ordered = FALSE, conf.level = alpha)
+TukeyHSD(aov_celk, "Ruka", ordered = FALSE, conf.level = alpha)
+TukeyHSD(aov_celk, "Kruh", ordered = FALSE, conf.level = alpha)
+
+par(mfrow = c(2,3))
+plot(LSD1)
+plot(LSD2)
+plot(LSD3)
+plot(TukeyHSD(aov_celk, "Jmeno", ordered = FALSE,las=1))
+plot(TukeyHSD(aov_celk, "Ruka", ordered = FALSE,las=1))
+plot(TukeyHSD(aov_celk, "Kruh", ordered = FALSE,las=1))
+
+
+#### 4) ###### neco z toho uz je ve 3), Jirka to zadava napreskacku
+aov_celk
+par(mfrow = c(2,2))
+plot(aov_celk)
+
+#### 5) ###### 
+
+#### 6) ###### 
+#zde bude problem ta variance u kruhu
 
