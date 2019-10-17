@@ -80,52 +80,61 @@ setwd(path)
 # Read data
 dat <- read.table("Data/ukol_adamkajetan.csv",header=TRUE,sep=",")
 
-names(dat)[names(dat)=="?.?Poradi"] <- "Poradi"
+colnames(dat)[1] <- "Poradi"
 dat$Kruh = factor(dat$Kruh)
 
 #### 2) ######
 #zakladni stat.
 summary(dat)
 
+adam <- dat[which(dat$Jmeno =="adam"),]
+kajetan <- dat[which(dat$Jmeno =="kajetan"),]
+dominant <- dat[which(dat$Ruka =="dominant"),]
+nondominant <- dat[which(dat$Ruka =="nondominant"),]
+joint <- dat[which(dat$Ruka =="joint"),]
+one_cm <- dat[which(dat$Kruh == 1),]
+three_cm <- dat[which(dat$Kruh == 3),]
+five_cm <- dat[which(dat$Kruh == 5),] 
+
 #Adam
 characteristics <- {} #initialization
-statistic <- summary(dat[which(dat$Jmeno =="adam"),]$Pocet)
-statistic[7] <-sd(dat[which(dat$Jmeno =="adam"),]$Pocet)
+statistic <- summary(adam$Pocet)
+statistic[7] <-sd(adam$Pocet)
 characteristics <- cbind(adam = statistic)
 
 #Kajetan
-statistic <- summary(dat[which(dat$Jmeno =="kajetan"),]$Pocet)
-statistic[7] <-sd(dat[which(dat$Jmeno =="kajetan"),]$Pocet)
+statistic <- summary(kajetan$Pocet)
+statistic[7] <-sd(kajetan$Pocet)
 characteristics <- cbind(characteristics, kajetan = statistic)
 
 #Dominant
-statistic <- summary(dat[which(dat$Ruka =="dominant"),]$Pocet)
-statistic[7] <-sd(dat[which(dat$Ruka =="dominant"),]$Pocet)
+statistic <- summary(dominant$Pocet)
+statistic[7] <-sd(dominant$Pocet)
 characteristics <- cbind(characteristics, dominant = statistic)
 
 #Nondominant
-statistic <- summary(dat[which(dat$Ruka =="nondominant"),]$Pocet)
-statistic[7] <-sd(dat[which(dat$Ruka =="nondominant"),]$Pocet)
+statistic <- summary(nondominant$Pocet)
+statistic[7] <-sd(nondominant$Pocet)
 characteristics <- cbind(characteristics, nondominant = statistic)
 
 #Joint
-statistic <- summary(dat[which(dat$Ruka =="joint"),]$Pocet)
-statistic[7] <-sd(dat[which(dat$Ruka =="joint"),]$Pocet)
+statistic <- summary(joint$Pocet)
+statistic[7] <-sd(joint$Pocet)
 characteristics <- cbind(characteristics, joint = statistic)
 
 #1 cm
-statistic <- summary(dat[which(dat$Kruh == 1),]$Pocet)
-statistic[7] <-sd(dat[which(dat$Kruh == 1),]$Pocet)
+statistic <- summary(one_cm$Pocet)
+statistic[7] <-sd(one_cm$Pocet)
 characteristics <- cbind(characteristics, "1 cm" = statistic)
 
 #3 cm
-statistic <- summary(dat[which(dat$Kruh == 3),]$Pocet)
-statistic[7] <-sd(dat[which(dat$Kruh == 3),]$Pocet)
+statistic <- summary(three_cm$Pocet)
+statistic[7] <-sd(three_cm$Pocet)
 characteristics <- cbind(characteristics, "3 cm" = statistic)
 
 #5 cm
-statistic <- summary(dat[which(dat$Kruh == 5),]$Pocet)
-statistic[7] <-sd(dat[which(dat$Kruh == 5),]$Pocet)
+statistic <- summary(five_cm$Pocet)
+statistic[7] <-sd(five_cm$Pocet)
 characteristics <- cbind(characteristics, "5 cm" = statistic)
 
 attributes(characteristics)$dimnames[[1]][7] <- "Sd." #name of last row
@@ -161,9 +170,11 @@ p5 <- ggplot(dat, aes(x=Kruh, y=Pocet)) +
   geom_boxplot(outlier.colour="red", outlier.shape=3,
                outlier.size=4)
 
-grid.arrange(p1,p2,ncol=2)
-grid.arrange(p3,p4,ncol=2)
-p5
+#tyto dva bych dal do .Rmd
+grid.arrange(p1,p2,ncol=2) 
+grid.arrange(p4,p3,p5,ncol=3)
+#p5
+
 
 ggplot(dat) +
   aes(x = Jmeno, y = Pocet) +
@@ -205,4 +216,61 @@ dat3 %>%
   geom_line(aes(group = Kruh)) +
   geom_point()
 
+#EFFECT PLOTS
+plot.design(Pocet~Ruka+Kruh+Jmeno+Poradi, data = dat)
+
+
+#### 3) ######
+#hypoteza shodnosti rozptylu pro jednotlive urovne
+alpha = 0.95
+
+##jmeno: asi nebudeme potrebovat, mame se zamerit na ruka a velikost kola
+
+# podminky f-testu: normalita, tj. histogram a shapiro-wilk test
+par(mfrow = c(1,2))
+hist(adam$Pocet, breaks=6)
+hist(kajetan$Pocet, breaks=6)
+shapiro.test(adam$Pocet)
+shapiro.test(kajetan$Pocet) # p-hodnoty > 0.05, tj. nezamitame normalitu
+var.test(adam$Pocet, kajetan$Pocet, ratio = 1, alternative = "two.sided", conf.level = alpha) # p-hodnota > 0.05, tj. nezamitame rovnost rozptylu
+
+##ruka
+par(mfrow = c(1,3))
+hist(dominant$Pocet)
+hist(nondominant$Pocet)
+hist(joint$Pocet)
+shapiro.test(dominant$Pocet)
+shapiro.test(nondominant$Pocet)
+shapiro.test(joint$Pocet) # p-hodnoty > 0.05, tj. nezamitame normalitu
+
+var.test(dominant$Pocet, nondominant$Pocet, ratio = 1, alternative = "two.sided", conf.level = alpha) # p-hodnota > 0.05, tj. nezamitame rovnost rozptylu
+var.test(dominant$Pocet, joint$Pocet, ratio = 1, alternative = "two.sided", conf.level = alpha) # p-hodnota > 0.05, tj. nezamitame rovnost rozptylu
+var.test(nondominant$Pocet, joint$Pocet, ratio = 1, alternative = "two.sided", conf.level = alpha) # p-hodnota > 0.05, tj. nezamitame rovnost rozptylu
+
+##kruh
+par(mfrow = c(1,3))
+hist(one_cm$Pocet)
+hist(three_cm$Pocet)
+hist(five_cm$Pocet)
+shapiro.test(one_cm$Pocet)
+shapiro.test(three_cm$Pocet)
+shapiro.test(five_cm$Pocet) # p-hodnoty > 0.05, tj. nezamitame normalitu
+
+var.test(one_cm$Pocet, three_cm$Pocet, ratio = 1, alternative = "two.sided", conf.level = alpha) # ZAMITAME!!!
+var.test(one_cm$Pocet, five_cm$Pocet, ratio = 1, alternative = "two.sided", conf.level = alpha) # ZAMITAME!!!
+var.test(three_cm$Pocet, five_cm$Pocet, ratio = 1, alternative = "two.sided", conf.level = alpha)
+
+# hypoteza shodnosti strednich hodnot
+# podminky t-testu: normalita, tj. histogram a shapiro-wilk test; uz jsme provadeli
+t.test(adam$Pocet, kajetan$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #nezamitame
+
+t.test(dominant$Pocet, nondominant$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #nezamitame
+t.test(dominant$Pocet, joint$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #nezamitame
+t.test(nondominant$Pocet, joint$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #nezamitame
+
+t.test(one_cm$Pocet, three_cm$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = FALSE) 
+t.test(one_cm$Pocet, five_cm$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = FALSE) 
+t.test(three_cm$Pocet, five_cm$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #vsechny jasne zamitame
+
+#Tukey HSD + Fisher LSD
 
