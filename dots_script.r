@@ -80,14 +80,56 @@ setwd(path)
 # Read data
 dat <- read.table("Data/ukol_adamkajetan.csv",header=TRUE,sep=",")
 
-names(dat)[names(dat)=="ï.¿Poradi"] <- "Poradi"
+names(dat)[names(dat)=="?.?Poradi"] <- "Poradi"
 dat$Kruh = factor(dat$Kruh)
 
 #### 2) ######
 #zakladni stat.
 summary(dat)
-summary(dat[which(dat$Jmeno =="adam"),])
-summary(dat[which(dat$Jmeno =="kajetan"),])
+
+#Adam
+characteristics <- {} #initialization
+statistic <- summary(dat[which(dat$Jmeno =="adam"),]$Pocet)
+statistic[7] <-sd(dat[which(dat$Jmeno =="adam"),]$Pocet)
+characteristics <- cbind(adam = statistic)
+
+#Kajetan
+statistic <- summary(dat[which(dat$Jmeno =="kajetan"),]$Pocet)
+statistic[7] <-sd(dat[which(dat$Jmeno =="kajetan"),]$Pocet)
+characteristics <- cbind(characteristics, kajetan = statistic)
+
+#Dominant
+statistic <- summary(dat[which(dat$Ruka =="dominant"),]$Pocet)
+statistic[7] <-sd(dat[which(dat$Ruka =="dominant"),]$Pocet)
+characteristics <- cbind(characteristics, dominant = statistic)
+
+#Nondominant
+statistic <- summary(dat[which(dat$Ruka =="nondominant"),]$Pocet)
+statistic[7] <-sd(dat[which(dat$Ruka =="nondominant"),]$Pocet)
+characteristics <- cbind(characteristics, nondominant = statistic)
+
+#Joint
+statistic <- summary(dat[which(dat$Ruka =="joint"),]$Pocet)
+statistic[7] <-sd(dat[which(dat$Ruka =="joint"),]$Pocet)
+characteristics <- cbind(characteristics, joint = statistic)
+
+#1 cm
+statistic <- summary(dat[which(dat$Kruh == 1),]$Pocet)
+statistic[7] <-sd(dat[which(dat$Kruh == 1),]$Pocet)
+characteristics <- cbind(characteristics, "1 cm" = statistic)
+
+#3 cm
+statistic <- summary(dat[which(dat$Kruh == 3),]$Pocet)
+statistic[7] <-sd(dat[which(dat$Kruh == 3),]$Pocet)
+characteristics <- cbind(characteristics, "3 cm" = statistic)
+
+#5 cm
+statistic <- summary(dat[which(dat$Kruh == 5),]$Pocet)
+statistic[7] <-sd(dat[which(dat$Kruh == 5),]$Pocet)
+characteristics <- cbind(characteristics, "5 cm" = statistic)
+
+attributes(characteristics)$dimnames[[1]][7] <- "Sd." #name of last row
+characteristics
 
 #BOXPLOTS
 
@@ -123,17 +165,17 @@ grid.arrange(p1,p2,ncol=2)
 grid.arrange(p3,p4,ncol=2)
 p5
 
-ggplot(dd) +
+ggplot(dat) +
   aes(x = Jmeno, y = Pocet) +
   geom_boxplot() +
   facet_wrap(~Ruka)
 
-ggplot(dd) +
+ggplot(dat) +
   aes(x = Ruka, y = Pocet) +
   geom_boxplot() +
   facet_wrap(~Kruh)
 
-ggplot(dd) +
+ggplot(dat) +
   aes(x = Jmeno, y = Pocet) +
   geom_boxplot() +
   facet_wrap(~Kruh)
@@ -162,4 +204,5 @@ dat3 %>%
   aes(x = Jmeno, y = grPocet, color = Kruh) +
   geom_line(aes(group = Kruh)) +
   geom_point()
+
 
