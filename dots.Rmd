@@ -1,0 +1,299 @@
+---
+title: "NEX1"
+author: "Kajetán Poliak, Adam Novotný"
+date: "18 øíjna 2019"
+output: 
+  pdf_document:
+    fig_height: 4
+    fig_width: 6
+  html_document:
+    fig_height: 4
+    fig_width: 6
+  word_document:
+    fig_height: 4
+    fig_width: 6
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# NEX - první domácí úkol
+
+## 1. èást
+*  Namerte data: experiment nastavte tak, aby byl znahodneny !!!!!
+                Poradi mereni si poznamenejte pro dalsi kontrolu pripadne zavislosti na poradi mereni.
+                Jednotlive lidi ve skupine berte jako ruzne operatory experimentu (blokujte).
+                Pocet replikaci u jednoho cloveka a jednoho casu vemte 1.
+                V protokolu krom popisu experimentu diskutujte i jen promenne, ktere mohli mit na mereni vliv.
+
+Experimetu se úèastnili dva operátoøi. Každý z operátorù se podrobil devíti mìøení (teèkování do 3 párù kruhù pomocí dominantní, nedominantní a obou rukou), kde každé meøení trvalo 10s. Poøadí meøení bylo znáhodnìno pomocí generátoru náhodné posloupnosti z www.random.org. Jako první se vygenerovala náhodné posloupnost celých èísel od 1 do 9, která urèovala poøadí meøení. Následnì se pomocí náhodné posloupnosti od 1 do 3 pøiøadila jedna z úrovní promìnné ruka ke každému ze tøí papírù obsahujícímu tøi rùzné velikosti kruhu.
+Na meøení mohlo mít vliv jak rozpoložení operátora (rùzné polohy sedu pøi experimentu, psychický nátlak okolí,..), tak nepøesnosti meøení èasu nebo rùzné psací potøeby operátorù.
+
+## 2. èást
+* Spoctete zakladni statistiky (mean, median a sd pro jednotlive faktory - velikost, ruka, operator)
+      Zobrazte namerena data (box plot, interaction plot, effects plot, ...) a okomentujte je
+      co z danych obrazku muzeme pred samotnou analyzou rici o vysledku?
+
+```{r 2.1 F, include=F}
+# Define directory
+
+fileName <- 'path.txt'
+path = readChar(fileName, file.info(fileName)$size)
+#setwd(path)
+
+# Read data
+dat <- read.table("Data/ukol_adamkajetan.csv",header=TRUE,sep=",")
+
+colnames(dat)[1] <- "Poradi"
+dat$Kruh = factor(dat$Kruh)
+
+#### 2) ######
+#zakladni stat.
+summary(dat)
+
+adam <- dat[which(dat$Jmeno =="adam"),]
+kajetan <- dat[which(dat$Jmeno =="kajetan"),]
+dominant <- dat[which(dat$Ruka =="dominant"),]
+nondominant <- dat[which(dat$Ruka =="nondominant"),]
+joint <- dat[which(dat$Ruka =="joint"),]
+one_cm <- dat[which(dat$Kruh == 1),]
+three_cm <- dat[which(dat$Kruh == 3),]
+five_cm <- dat[which(dat$Kruh == 5),] 
+
+#Adam
+characteristics <- {} #initialization
+statistic <- summary(adam$Pocet)
+statistic[7] <-sd(adam$Pocet)
+characteristics <- cbind(adam = statistic)
+
+#Kajetan
+statistic <- summary(kajetan$Pocet)
+statistic[7] <-sd(kajetan$Pocet)
+characteristics <- cbind(characteristics, kajetan = statistic)
+
+#Dominant
+statistic <- summary(dominant$Pocet)
+statistic[7] <-sd(dominant$Pocet)
+characteristics <- cbind(characteristics, dominant = statistic)
+
+#Nondominant
+statistic <- summary(nondominant$Pocet)
+statistic[7] <-sd(nondominant$Pocet)
+characteristics <- cbind(characteristics, nondominant = statistic)
+
+#Joint
+statistic <- summary(joint$Pocet)
+statistic[7] <-sd(joint$Pocet)
+characteristics <- cbind(characteristics, joint = statistic)
+
+#1 cm
+statistic <- summary(one_cm$Pocet)
+statistic[7] <-sd(one_cm$Pocet)
+characteristics <- cbind(characteristics, "1 cm" = statistic)
+
+#3 cm
+statistic <- summary(three_cm$Pocet)
+statistic[7] <-sd(three_cm$Pocet)
+characteristics <- cbind(characteristics, "3 cm" = statistic)
+
+#5 cm
+statistic <- summary(five_cm$Pocet)
+statistic[7] <-sd(five_cm$Pocet)
+characteristics <- cbind(characteristics, "5 cm" = statistic)
+
+attributes(characteristics)$dimnames[[1]][7] <- "Sd." #name of last row
+
+#BOXPLOTS
+
+#boxplot(Pocet~Kruh, dat)
+#boxplot(Pocet~Poradi, dat)
+#boxplot(Pocet~Jmeno, dat)
+#boxplot(Pocet~Ruka, dat)
+#boxplot(Pocet~Kruh+Ruka, dat)
+#boxplot(Pocet~Jmeno+Kruh, dat)
+#boxplot(Pocet~Ruka+Jmeno, dat)
+require(dplyr)
+require(ggplot2)
+require(gridExtra)
+
+
+p1 <- ggplot(dat, aes(x=Ruka, y=Pocet, color = Jmeno)) + 
+  geom_boxplot() + ggtitle("Box plot 1")
+
+p2 <- ggplot(dat, aes(x=Kruh, y=Pocet, color = Jmeno)) + 
+  geom_boxplot() + ggtitle("Box plot 2")
+
+p3 <- ggplot(dat, aes(x=Ruka, y=Pocet)) + 
+  geom_boxplot()+ ggtitle("Box plot 3")
+
+p4 <- ggplot(dat, aes(x=Jmeno, y=Pocet)) + 
+  geom_boxplot() + ggtitle("Box plot 4")
+
+p5 <- ggplot(dat, aes(x=Kruh, y=Pocet)) + 
+  geom_boxplot(outlier.colour="red", outlier.shape=3,
+               outlier.size=4) + ggtitle("Box plot 5")
+
+#INFLUENCE PLOTS
+dat %>%
+  group_by(Jmeno, Ruka) %>% 
+  summarise(grPocet = mean(Pocet)) -> dat2
+
+
+dat %>%
+  group_by(Jmeno, Kruh) %>% 
+  summarise(grPocet = mean(Pocet)) -> dat3
+
+```
+
+```{r 2.1 T, include = T}
+# ZÁKLADÍ STATISTIKY
+characteristics
+```
+
+Tabulka zobrazuje základní statistiky experimentu. Vidíme, že operátoøi mají podobná minima ale maximum Adama je o celých 11 vyšší. Stejnì tak je vyšší støední hodnota poètu teèek Adama. Maxima u promìnných dominant, nondominant a joint tedy souvisí s operátorem Adam. Podle oèekávání vidíme, že hodnoty maxim i minim jsou vyšší se zvìtšujícím se polomìrem kruhu. Smìrodatná odchylka u promìnných adam, kajetán, dominant, nondominant a joint dosahují pomìrnì vysokých hodnot, to je vysvìtlitlé tím, že poèet teèek nabýval pro každý kruh se radikálnì lišil. Nejnižší støední hodnotu z rùzných úrovní promìnné ruka má joint.
+
+```{r 2.2 T,include=T}
+#BOX-PLOTS
+grid.arrange(p1,p2,ncol=2) 
+grid.arrange(p4,p3,p5,ncol=3)
+```
+
+Z boxplotu 1 vidíme, že støední hodnoty u dominant mají operátoøi podobné. U nondominant a joint má Adam vyšší støední hodnoty i znatelnì vìtší variance. Boxplot 2 ukazuje, že Adam mìl vyšší poèet teèek všude, kromì nejmenšího kruhu. 
+
+```{r 2.3 T, include=T}
+#INTERACTION PLOTS
+dat2 %>% 
+  ggplot() +
+  aes(x = Jmeno, y = grPocet, color = Ruka) +
+  geom_line(aes(group = Ruka)) +
+  geom_point()
+
+dat3 %>% 
+  ggplot() +
+  aes(x = Jmeno, y = grPocet, color = Kruh) +
+  geom_line(aes(group = Kruh)) +
+  geom_point()
+```
+
+```{r 2.4 T, include=TRUE}
+
+#EFFECT PLOTS
+plot.design(Pocet~Ruka+Kruh+Jmeno, data = dat)
+```
+
+
+
+## 3. èást
+
+* Zamerte se zvlaste na faktory ruka a velikost kola. Otestujte hypotezu o schodnosti rozptylu pro jednotlive urovne
+ a vhodnym testem overte stejnost strednich hodnot. 
+ Provedte Tukey HSD a Fisher LSD test pro parove porovnani stednich hodnot jednotlivych skupin s vybranou korekci p-hodnoty.
+ 
+```{r third part F, include = F}
+require(agricolae)
+```
+
+```{r third part T, include = T}
+#hypoteza shodnosti rozptylu pro jednotlive urovne
+alpha = 0.95
+
+# podminky f-testu: normalita, tj. histogram a shapiro-wilk test
+par(mfrow = c(1,2))
+hist(adam$Pocet, breaks=6)
+hist(kajetan$Pocet, breaks=6)
+shapiro.test(adam$Pocet)
+shapiro.test(kajetan$Pocet) # p-hodnoty > 0.05, tj. nezamitame normalitu
+
+var.test(adam$Pocet, kajetan$Pocet, ratio = 1, alternative = "two.sided", conf.level = alpha) # p-hodnota > 0.05, tj. nezamitame rovnost rozptylu
+
+## RUKA
+par(mfrow = c(1,3))
+hist(dominant$Pocet)
+hist(nondominant$Pocet)
+hist(joint$Pocet)
+shapiro.test(dominant$Pocet)
+shapiro.test(nondominant$Pocet)
+shapiro.test(joint$Pocet) # p-hodnoty > 0.05, tj. nezamitame normalitu
+
+
+
+var.test(dominant$Pocet, nondominant$Pocet, ratio = 1, alternative = "two.sided", conf.level = alpha) # p-hodnota > 0.05, tj. nezamitame rovnost rozptylu
+var.test(dominant$Pocet, joint$Pocet, ratio = 1, alternative = "two.sided", conf.level = alpha) # p-hodnota > 0.05, tj. nezamitame rovnost rozptylu
+var.test(nondominant$Pocet, joint$Pocet, ratio = 1, alternative = "two.sided", conf.level = alpha) # p-hodnota > 0.05, tj. nezamitame rovnost rozptylu
+
+## KRUH
+par(mfrow = c(1,3))
+hist(one_cm$Pocet)
+hist(three_cm$Pocet)
+hist(five_cm$Pocet)
+shapiro.test(one_cm$Pocet)
+shapiro.test(three_cm$Pocet)
+shapiro.test(five_cm$Pocet) # p-hodnoty > 0.05, tj. nezamitame normalitu
+
+var.test(one_cm$Pocet, three_cm$Pocet, ratio = 1, alternative = "two.sided", conf.level = alpha) # ZAMITAME!!!
+var.test(one_cm$Pocet, five_cm$Pocet, ratio = 1, alternative = "two.sided", conf.level = alpha) # ZAMITAME!!!
+var.test(three_cm$Pocet, five_cm$Pocet, ratio = 1, alternative = "two.sided", conf.level = alpha)
+
+# hypoteza shodnosti strednich hodnot
+# podminky t-testu: normalita, tj. histogram a shapiro-wilk test; uz jsme provadeli
+t.test(adam$Pocet, kajetan$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #nezamitame
+
+### toto bude lepsi nahradit pairwise testem
+t.test(dominant$Pocet, nondominant$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #nezamitame
+t.test(dominant$Pocet, joint$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #nezamitame
+t.test(nondominant$Pocet, joint$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #nezamitame
+
+t.test(one_cm$Pocet, three_cm$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = FALSE) #var.equal = FALSE pouziva Welchovu aproximaci
+t.test(one_cm$Pocet, five_cm$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = FALSE) 
+t.test(three_cm$Pocet, five_cm$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #vsechny jasne zamitame
+### toto bude lepsi nahradit pairwise testem
+
+pairwise.t.test(dat$Pocet,dat$Ruka,p.adjust.method="bonferroni")
+pairwise.t.test(dat$Pocet,dat$Ruka,p.adjust.method="hochberg")
+
+pairwise.t.test(dat$Pocet,dat$Kruh,p.adjust.method="bonferroni")
+pairwise.t.test(dat$Pocet,dat$Kruh,p.adjust.method="hochberg")
+```
+
+Na zaèátku otestujeme normalitu jakožto podmínku F-testu. Pracujeme na 5% hladinì významnosti. Normalitu testujeme pomocí Shapirova-Wilkova testu. Pro operátory nezamítáme nulovou hypotézu o normálním rozdìlení. F-test pro operátory vrací p-hodnotu 0.1827, nezamítáme tedy nulovou hypotézu o rovnosti rozptylù.
+Pøecházíme k faktoru Ruka. Pro všechny úrovnì nezamítáme, dle Shapiro-wilkova testu, normalitu. F- test vrací pro páry dominant-nondominant, dominant-joint a nondominant-joint respektive p-hodnoty  0.84, 0.92 a 0.76 nezamítáme tedy rovnosti rozptylù.
+Jako poslední testujeme faktor Kruh. P-hodnoty S-W testu pro úrovnì 1cm, 3cm a 5cm jsou postupnì 0.55, 0.11 a 0.31, ani pro jednu z úrovní nezamítáme normalitu. F-test vrací pro dvojice 1cm-3cm, 1cm-5cm a 3cm-5cm p-hodnoty 0.030, 0.001 a 0.168 respektive. Pro dvojice 1cm-3cm a 1cm-5cm zamítáme nulovou hypotézu o rovnosti rozptylù.
+Dalším bodem je testování hypotézy shodnosti støedních hodnot. Jedinou podmínkou použití t-testu je normalita, která je již otestována.
+
+```{r third part.2 T, include = T}
+#Tukey HSD + Fisher LSD
+#Celkovy aov
+#Kruh bychom ani testovat, protoze jsou ruzne variance ve skupinach 1cm, 3cm, 5cm
+aov_celk =  aov(Pocet ~ Jmeno + Ruka + Kruh, data = dat) #ruka neni stat. vyznamna
+summary(aov_celk)
+LSD1 <- LSD.test(aov_celk, "Jmeno"); #LSD1
+#LSD2 <- LSD.test(aov_celk, "Ruka"); LSD2
+#LSD3 <- LSD.test(aov_celk, "Kruh"); LSD3
+TukeyHSD(aov_celk, "Jmeno", ordered = FALSE, conf.level = alpha)
+#TukeyHSD(aov_celk, "Ruka", ordered = FALSE, conf.level = alpha)
+#TukeyHSD(aov_celk, "Kruh", ordered = FALSE, conf.level = alpha)
+
+#par(mfrow = c(2,3))
+#plot(LSD1)
+#plot(LSD2)
+#plot(LSD3)
+#plot(TukeyHSD(aov_celk, "Jmeno", ordered = FALSE,las=1))
+#plot(TukeyHSD(aov_celk, "Ruka", ordered = FALSE,las=1))
+#plot(TukeyHSD(aov_celk, "Kruh", ordered = FALSE,las=1))
+
+
+```
+
+
+## 4.èást
+
+*  Analyzute data pomoci ANOVA (vsechny promenne berte jako faktor)
+         - s predpokladem, ze kazdy z ucastniku experimentu tvori jeden blok.
+         - diskutujte vysledky, overte predpoklady, vykreslete QQ-plot, residua x fitted values, resida x cas, ...
+         - diskutujte vliv znahodneni experimentu a vyvoj rezidui v case (cislo mereni)
+
+```{r fourth part T, include = T}
+aov_celk
+par(mfrow = c(2,2))
+plot(aov_celk)
+```
