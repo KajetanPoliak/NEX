@@ -10,6 +10,8 @@ library(nlme)         # for handling mixed-effects models;
 library(pwr)          # power analysis
 library(agricolae)    # for Fisher LSD method
 library(scatterplot3d)# for 3d scatter plot
+library(nortest)      # for lillie.test
+library(lmtest)       # for bptest
 # for opening xls files: library(gdata) library(XLConnect) library(xlsReadWrite)
 
 getwd()  # find where are you at the moment 
@@ -75,7 +77,7 @@ getwd()  # find where are you at the moment
 
 fileName <- 'path.txt'
 path = readChar(fileName, file.info(fileName)$size)
-setwd(path)
+setwd("C:/Adam/School_FJFI/magisterske/3/NEX/ukoly/NEX")
 
 # Read data
 dat <- read.table("Data/ukol_adamkajetan.csv",header=TRUE,sep=",")
@@ -306,8 +308,52 @@ aov_celk
 par(mfrow = c(2,2))
 plot(aov_celk)
 
+#bartlett.test(Pocet ~ Jmeno + Kruh, data = dat)
+#bartlett.test(Pocet ~ Kruh, data = dat)
+#bartlett.test(Pocet ~ Ruka, data = dat)
+
+#leveneTest(Pocet ~ Jmeno, data = dat)
+#leveneTest(Pocet ~ Kruh, data = dat)
+#leveneTest(Pocet ~ Ruka, data = dat)
+
+lillie.test(residuals(aov_celk))
+shapiro.test(resid(aov_celk))
+bptest(aov_celk)
+
+## FINALNI MODEL
+aov_celk2 =  aov(Pocet ~ Jmeno * Kruh + Ruka, data = dat) #ruka neni stat. vyznamna
+summary(aov_celk2)
+plot(aov_celk2)
+lillie.test(residuals(aov_celk2))
+shapiro.test(resid(aov_celk2))
+bptest(aov_celk2)
+
+aov_celk3 =  aov(Pocet ~ Jmeno * Kruh, data = dat) #ruka neni stat. vyznamna
+summary(aov_celk3)
+plot(aov_celk3)
+lillie.test(residuals(aov_celk3))
+shapiro.test(resid(aov_celk3))
+bptest(aov_celk3)
+
+anova(aov_celk2, aov_celk3)
+
+
 #### 5) ###### 
 
 #### 6) ###### 
 #zde bude problem ta variance u kruhu
 
+
+
+#### 8) ###### 
+dat$Kruh <- as.numeric(dat$Kruh)
+
+linmod <- lm(Pocet ~ Kruh, data = dat)
+summary(linmod)
+
+linmod2 <- lm(Pocet ~ Kruh + I(Kruh^2), data = dat)
+summary(linmod2)
+
+anova(linmod2, linmod) #??? nezamitame, takze je lepsi ten mensi model, tj. linmod
+
+plot(linmod)
