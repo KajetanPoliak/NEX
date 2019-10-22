@@ -286,7 +286,6 @@ pairwise.t.test(dat$Pocet,dat$Kruh,p.adjust.method="hochberg")
 #Celkovy aov
 #Kruh bychom ani testovat, protoze jsou ruzne variance ve skupinach 1cm, 3cm, 5cm
 aov_celk =  aov(Pocet ~ Jmeno + Ruka + Kruh, data = dat) #ruka neni stat. vyznamna
-summary(aov_celk)
 LSD1 <- LSD.test(aov_celk, "Jmeno"); LSD1
 LSD2 <- LSD.test(aov_celk, "Ruka"); LSD2
 LSD3 <- LSD.test(aov_celk, "Kruh"); LSD3
@@ -304,46 +303,50 @@ plot(TukeyHSD(aov_celk, "Kruh", ordered = FALSE,las=1))
 
 
 #### 4) ###### neco z toho uz je ve 3), Jirka to zadava napreskacku
-aov_celk
+summary(aov_celk)
 par(mfrow = c(2,2))
 plot(aov_celk)
 
 #bartlett.test(Pocet ~ Jmeno + Kruh, data = dat)
 #bartlett.test(Pocet ~ Kruh, data = dat)
 #bartlett.test(Pocet ~ Ruka, data = dat)
-
 #leveneTest(Pocet ~ Jmeno, data = dat)
 #leveneTest(Pocet ~ Kruh, data = dat)
 #leveneTest(Pocet ~ Ruka, data = dat)
 
-lillie.test(residuals(aov_celk))
+lillie.test(resid(aov_celk))
 shapiro.test(resid(aov_celk))
 bptest(aov_celk)
 
-## FINALNI MODEL
-aov_celk2 =  aov(Pocet ~ Jmeno * Kruh + Ruka, data = dat) #ruka neni stat. vyznamna
+#Ruka je nevyznamna, stejne tak ukazuje LSD a HSD => odstranme ji
+aov_celk2 =  aov(Pocet ~ Jmeno + Kruh, data = dat) #ruka neni stat. vyznamna
 summary(aov_celk2)
-plot(aov_celk2)
-lillie.test(residuals(aov_celk2))
-shapiro.test(resid(aov_celk2))
-bptest(aov_celk2)
 
-aov_celk3 =  aov(Pocet ~ Jmeno * Kruh, data = dat) #ruka neni stat. vyznamna
+#Zkusme i interakci mezi Jmeno a Kruh => ## FINALNI MODEL
+aov_celk3 =  aov(Pocet ~ Jmeno * Kruh, data = dat) #ruka neni stat. vyznamna, jiz neuvazujeme
 summary(aov_celk3)
 plot(aov_celk3)
 lillie.test(residuals(aov_celk3))
 shapiro.test(resid(aov_celk3))
 bptest(aov_celk3)
 
-anova(aov_celk2, aov_celk3)
+#Zkusme, zdali nebude mit Poradi vliv
+aov_celk4 =  aov(Pocet ~ Jmeno * Kruh + Poradi, data = dat) #ruka neni stat. vyznamna
+summary(aov_celk4) #Poradi ma p-hodnotu 0.084
+plot(aov_celk4)
+lillie.test(residuals(aov_celk4))
+shapiro.test(resid(aov_celk4))
+bptest(aov_celk4)
+
+#Porovnat dva nested modely; jeden obsahuje Poradi, druhy ne
+anova(aov_celk3, aov_celk4) # > 0.05, tj. nezamitame a lepsi je model aov_celk3: Pocet ~ Jmeno * Kruh
 
 
 #### 5) ###### 
 
 #### 6) ###### 
-#zde bude problem ta variance u kruhu
-
-
+#zde bude problem ta variance u kruhu, 
+#NE! Neni problem; v plotech je to OK a bptest() taky vychazi
 
 #### 8) ###### 
 dat$Kruh <- as.numeric(dat$Kruh)
