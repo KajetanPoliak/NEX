@@ -357,12 +357,12 @@ summary(linmod)
 linmod2 <- lm(Pocet ~ Kruh + I(Kruh^2), data = dat)
 summary(linmod2)#druha mocnina ani neni vyznamna, takze nema smysl dal tento model uvazovat
 
-#Final model => linmod
 plot(linmod)
 lillie.test(residuals(linmod))
 shapiro.test(resid(linmod))
 bptest(linmod) #bp zamita, mame heteroskedasticitu
 
+#Final model => linmod_log
 linmod_log <- lm(log(Pocet) ~ Kruh, data = dat)
 summary(linmod_log)
 plot(linmod_log)
