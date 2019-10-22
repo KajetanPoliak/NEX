@@ -355,8 +355,19 @@ linmod <- lm(Pocet ~ Kruh, data = dat)
 summary(linmod)
 
 linmod2 <- lm(Pocet ~ Kruh + I(Kruh^2), data = dat)
-summary(linmod2)
+summary(linmod2)#druha mocnina ani neni vyznamna, takze nema smysl dal tento model uvazovat
 
-anova(linmod2, linmod) #??? nezamitame, takze je lepsi ten mensi model, tj. linmod
-
+#Final model => linmod
 plot(linmod)
+lillie.test(residuals(linmod))
+shapiro.test(resid(linmod))
+bptest(linmod) #bp zamita, mame heteroskedasticitu
+
+linmod_log <- lm(log(Pocet) ~ Kruh, data = dat)
+summary(linmod_log)
+plot(linmod_log)
+lillie.test(residuals(linmod_log))
+shapiro.test(resid(linmod_log))
+bptest(linmod_log) 
+#jiz je vse v poradku; testy vychazeji i graficky by se to dalo ukecat
+#navic i intercept je vyznamny, takze bonus navic; R^2_adj 0.85, to vypada fajn
