@@ -77,7 +77,7 @@ getwd()  # find where are you at the moment
 
 fileName <- 'path.txt'
 path = readChar(fileName, file.info(fileName)$size)
-setwd("C:/Adam/School_FJFI/magisterske/3/NEX/ukoly/NEX")
+setwd(path)
 
 # Read data
 dat <- read.table("Data/ukol_adamkajetan.csv",header=TRUE,sep=",")
