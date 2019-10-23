@@ -1,7 +1,7 @@
 ---
 title: "NEX1"
-author: "KajetÃ¡n Poliak, Adam NovotnÃ½"
-date: "18 Å™Ã­jna 2019"
+author: "Kajetán Poliak, Adam Novotnı"
+date: "18 øíjna 2019"
 output: 
   pdf_document:
     fig_height: 4
@@ -17,19 +17,19 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-# NEX - prvnÃ­ domÃ¡cÃ­ Ãºkol
+# NEX - první domácí úkol
 
-## 1. ÄÃ¡st
+## 1. èást
 *  Namerte data: experiment nastavte tak, aby byl znahodneny !!!!!
                 Poradi mereni si poznamenejte pro dalsi kontrolu pripadne zavislosti na poradi mereni.
                 Jednotlive lidi ve skupine berte jako ruzne operatory experimentu (blokujte).
                 Pocet replikaci u jednoho cloveka a jednoho casu vemte 1.
                 V protokolu krom popisu experimentu diskutujte i jen promenne, ktere mohli mit na mereni vliv.
 
-Experimetu se ÃºÄastnili dva operÃ¡toÅ™i. KaÅ¾dÃ½ z operÃ¡torÅ¯ se podrobil devÃ­ti mÄ›Å™enÃ­ (teÄkovÃ¡nÃ­ do 3 pÃ¡rÅ¯ kruhÅ¯ pomocÃ­ dominantnÃ­, nedominantnÃ­ a obou rukou), kde kaÅ¾dÃ© meÅ™enÃ­ trvalo 10s. PoÅ™adÃ­ meÅ™enÃ­ bylo znÃ¡hodnÄ›no pomocÃ­ generÃ¡toru nÃ¡hodnÃ© posloupnosti z www.random.org. Jako prvnÃ­ se vygenerovala nÃ¡hodnÃ© posloupnost celÃ½ch ÄÃ­sel od 1 do 9, kterÃ¡ urÄovala poÅ™adÃ­ meÅ™enÃ­. NÃ¡slednÄ› se pomocÃ­ nÃ¡hodnÃ© posloupnosti od 1 do 3 pÅ™iÅ™adila jedna z ÃºrovnÃ­ promÄ›nnÃ© ruka ke kaÅ¾dÃ©mu ze tÅ™Ã­ papÃ­rÅ¯ obsahujÃ­cÃ­mu tÅ™i rÅ¯znÃ© velikosti kruhu.
-Na meÅ™enÃ­ mohlo mÃ­t vliv jak rozpoloÅ¾enÃ­ operÃ¡tora (rÅ¯znÃ© polohy sedu pÅ™i experimentu, psychickÃ½ nÃ¡tlak okolÃ­,..), tak nepÅ™esnosti meÅ™enÃ­ Äasu nebo rÅ¯znÃ© psacÃ­ potÅ™eby operÃ¡torÅ¯.
+Experimetu se úèastnili dva operátoøi. Kadı z operátorù se podrobil devíti mìøení (teèkování do 3 párù kruhù pomocí dominantní, nedominantní a obou rukou), kde kadé meøení trvalo 10s. Poøadí meøení bylo znáhodnìno pomocí generátoru náhodné posloupnosti z www.random.org. Jako první se vygenerovala náhodné posloupnost celıch èísel od 1 do 9, která urèovala poøadí meøení. Následnì se pomocí náhodné posloupnosti od 1 do 3 pøiøadila jedna z úrovní promìnné ruka ke kadému ze tøí papírù obsahujícímu tøi rùzné velikosti kruhu.
+Na meøení mohlo mít vliv jak rozpoloení operátora (rùzné polohy sedu pøi experimentu, psychickı nátlak okolí,..), tak nepøesnosti meøení èasu nebo rùzné psací potøeby operátorù.
 
-## 2. ÄÃ¡st
+## 2. èást
 * Spoctete zakladni statistiky (mean, median a sd pro jednotlive faktory - velikost, ruka, operator)
       Zobrazte namerena data (box plot, interaction plot, effects plot, ...) a okomentujte je
       co z danych obrazku muzeme pred samotnou analyzou rici o vysledku?
@@ -146,11 +146,11 @@ dat %>%
 ```
 
 ```{r 2.1 T, include = T}
-# ZÃKLADÃ STATISTIKY
+# ZÁKLADÍ STATISTIKY
 characteristics
 ```
 
-Tabulka zobrazuje zÃ¡kladnÃ­ statistiky experimentu. VidÃ­me, Å¾e operÃ¡toÅ™i majÃ­ podobnÃ¡ minima ale maximum Adama je o celÃ½ch 11 vyÅ¡Å¡Ã­. StejnÄ› tak je vyÅ¡Å¡Ã­ stÅ™ednÃ­ hodnota poÄtu teÄek Adama. Maxima u promÄ›nnÃ½ch dominant, nondominant a joint tedy souvisÃ­ s operÃ¡torem Adam. Podle oÄekÃ¡vÃ¡nÃ­ vidÃ­me, Å¾e hodnoty maxim i minim jsou vyÅ¡Å¡Ã­ se zvÄ›tÅ¡ujÃ­cÃ­m se polomÄ›rem kruhu. SmÄ›rodatnÃ¡ odchylka u promÄ›nnÃ½ch adam, kajetÃ¡n, dominant, nondominant a joint dosahujÃ­ pomÄ›rnÄ› vysokÃ½ch hodnot, to je vysvÄ›tlitlÃ© tÃ­m, Å¾e poÄet teÄek nabÃ½val pro kaÅ¾dÃ½ kruh se radikÃ¡lnÄ› liÅ¡il. NejniÅ¾Å¡Ã­ stÅ™ednÃ­ hodnotu z rÅ¯znÃ½ch ÃºrovnÃ­ promÄ›nnÃ© ruka mÃ¡ joint.
+Tabulka zobrazuje základní statistiky experimentu. Vidíme, e operátoøi mají podobná minima ale maximum Adama je o celıch 11 vyšší. Stejnì tak je vyšší støední hodnota poètu teèek Adama. Maxima u promìnnıch dominant, nondominant a joint tedy souvisí s operátorem Adam. Podle oèekávání vidíme, e hodnoty maxim i minim jsou vyšší se zvìtšujícím se polomìrem kruhu. Smìrodatná odchylka u promìnnıch adam, kajetán, dominant, nondominant a joint dosahují pomìrnì vysokıch hodnot, to je vysvìtlitlé tím, e poèet teèek nabıval pro kadı kruh se radikálnì lišil. Nejniší støední hodnotu z rùznıch úrovní promìnné ruka má joint.
 
 ```{r 2.2 T,include=T}
 #BOX-PLOTS
@@ -158,7 +158,7 @@ grid.arrange(p1,p2,ncol=2)
 grid.arrange(p4,p3,p5,ncol=3)
 ```
 
-Z boxplotu 1 vidÃ­me, Å¾e stÅ™ednÃ­ hodnoty u dominant majÃ­ operÃ¡toÅ™i podobnÃ©. U nondominant a joint mÃ¡ Adam vyÅ¡Å¡Ã­ stÅ™ednÃ­ hodnoty i znatelnÄ› vÄ›tÅ¡Ã­ variance. Boxplot 2 ukazuje, Å¾e Adam mÄ›l vyÅ¡Å¡Ã­ poÄet teÄek vÅ¡ude, kromÄ› nejmenÅ¡Ã­ho kruhu. 
+Z boxplotu 1 vidíme, e støední hodnoty u dominant mají operátoøi podobné. U nondominant a joint má Adam vyšší støední hodnoty i znatelnì vìtší variance. Boxplot 2 ukazuje, e Adam mìl vyšší poèet teèek všude, kromì nejmenšího kruhu. 
 
 ```{r 2.3 T, include=T}
 #INTERACTION PLOTS
@@ -183,17 +183,17 @@ plot.design(Pocet~Ruka+Kruh+Jmeno, data = dat)
 
 
 
-## 3. ÄÃ¡st
+## 3. èást
 
 * Zamerte se zvlaste na faktory ruka a velikost kola. Otestujte hypotezu o schodnosti rozptylu pro jednotlive urovne
  a vhodnym testem overte stejnost strednich hodnot. 
  Provedte Tukey HSD a Fisher LSD test pro parove porovnani stednich hodnot jednotlivych skupin s vybranou korekci p-hodnoty.
  
-```{r third part F, include = F}
+```{r 3.1 F, include = F}
 require(agricolae)
 ```
 
-```{r third part T, include = T}
+```{r 3.1 T, include = T}
 #hypoteza shodnosti rozptylu pro jednotlive urovne
 alpha = 0.95
 
@@ -233,59 +233,55 @@ shapiro.test(five_cm$Pocet) # p-hodnoty > 0.05, tj. nezamitame normalitu
 var.test(one_cm$Pocet, three_cm$Pocet, ratio = 1, alternative = "two.sided", conf.level = alpha) # ZAMITAME!!!
 var.test(one_cm$Pocet, five_cm$Pocet, ratio = 1, alternative = "two.sided", conf.level = alpha) # ZAMITAME!!!
 var.test(three_cm$Pocet, five_cm$Pocet, ratio = 1, alternative = "two.sided", conf.level = alpha)
-
-# hypoteza shodnosti strednich hodnot
-# podminky t-testu: normalita, tj. histogram a shapiro-wilk test; uz jsme provadeli
-t.test(adam$Pocet, kajetan$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #nezamitame
-
-### toto bude lepsi nahradit pairwise testem
-t.test(dominant$Pocet, nondominant$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #nezamitame
-t.test(dominant$Pocet, joint$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #nezamitame
-t.test(nondominant$Pocet, joint$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #nezamitame
-
-t.test(one_cm$Pocet, three_cm$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = FALSE) #var.equal = FALSE pouziva Welchovu aproximaci
-t.test(one_cm$Pocet, five_cm$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = FALSE) 
-t.test(three_cm$Pocet, five_cm$Pocet, conf.level = 0.95, alternative = "two.sided", var.equal = TRUE) #vsechny jasne zamitame
-### toto bude lepsi nahradit pairwise testem
-
-pairwise.t.test(dat$Pocet,dat$Ruka,p.adjust.method="bonferroni")
-pairwise.t.test(dat$Pocet,dat$Ruka,p.adjust.method="hochberg")
-
-pairwise.t.test(dat$Pocet,dat$Kruh,p.adjust.method="bonferroni")
-pairwise.t.test(dat$Pocet,dat$Kruh,p.adjust.method="hochberg")
 ```
 
-Na zaÄÃ¡tku otestujeme normalitu jakoÅ¾to podmÃ­nku F-testu. Pracujeme na 5% hladinÄ› vÃ½znamnosti. Normalitu testujeme pomocÃ­ Shapirova-Wilkova testu. Pro operÃ¡tory nezamÃ­tÃ¡me nulovou hypotÃ©zu o normÃ¡lnÃ­m rozdÄ›lenÃ­. F-test pro operÃ¡tory vracÃ­ p-hodnotu 0.1827, nezamÃ­tÃ¡me tedy nulovou hypotÃ©zu o rovnosti rozptylÅ¯.
-PÅ™echÃ¡zÃ­me k faktoru Ruka. Pro vÅ¡echny ÃºrovnÄ› nezamÃ­tÃ¡me, dle Shapiro-wilkova testu, normalitu. F- test vracÃ­ pro pÃ¡ry dominant-nondominant, dominant-joint a nondominant-joint respektive p-hodnoty  0.84, 0.92 a 0.76 nezamÃ­tÃ¡me tedy rovnosti rozptylÅ¯.
-Jako poslednÃ­ testujeme faktor Kruh. P-hodnoty S-W testu pro ÃºrovnÄ› 1cm, 3cm a 5cm jsou postupnÄ› 0.55, 0.11 a 0.31, ani pro jednu z ÃºrovnÃ­ nezamÃ­tÃ¡me normalitu. F-test vracÃ­ pro dvojice 1cm-3cm, 1cm-5cm a 3cm-5cm p-hodnoty 0.030, 0.001 a 0.168 respektive. Pro dvojice 1cm-3cm a 1cm-5cm zamÃ­tÃ¡me nulovou hypotÃ©zu o rovnosti rozptylÅ¯.
-DalÅ¡Ã­m bodem je testovÃ¡nÃ­ hypotÃ©zy shodnosti stÅ™ednÃ­ch hodnot. Jedinou podmÃ­nkou pouÅ¾itÃ­ t-testu je normalita, kterÃ¡ je jiÅ¾ otestovÃ¡na.
+Na zaèátku otestujeme normalitu jakoto podmínku F-testu. Pracujeme na 5% hladinì vıznamnosti. Normalitu testujeme pomocí Shapirova-Wilkova testu. Pro operátory nezamítáme nulovou hypotézu o normálním rozdìlení. F-test pro operátory vrací p-hodnotu 0.1827, nezamítáme tedy nulovou hypotézu o rovnosti rozptylù.
+Pøecházíme k faktoru Ruka. Pro všechny úrovnì nezamítáme, dle Shapiro-wilkova testu, normalitu. F- test vrací pro páry dominant-nondominant, dominant-joint a nondominant-joint respektive p-hodnoty  0.84, 0.92 a 0.76 nezamítáme tedy rovnosti rozptylù.
+Jako poslední testujeme faktor Kruh. P-hodnoty S-W testu pro úrovnì 1cm, 3cm a 5cm jsou postupnì 0.55, 0.11 a 0.31, ani pro jednu z úrovní nezamítáme normalitu. F-test vrací pro dvojice 1cm-3cm, 1cm-5cm a 3cm-5cm p-hodnoty 0.030, 0.001 a 0.168 respektive. Pro dvojice 1cm-3cm a 1cm-5cm zamítáme nulovou hypotézu o rovnosti rozptylù.
 
-```{r third part.2 T, include = T}
+```{r 3.2 T, include = T}
+# hypoteza shodnosti strednich hodnot
+
+pairwise.t.test(dat$Pocet,dat$Ruka,p.adjust.method="bonferroni", var.equal = T)
+pairwise.t.test(dat$Pocet,dat$Ruka,p.adjust.method="hochberg", var.equal = T)
+
+pairwise.t.test(dat$Pocet,dat$Kruh,p.adjust.method="bonferroni", var.equal = F)
+pairwise.t.test(dat$Pocet,dat$Kruh,p.adjust.method="hochberg", var.equal = F)
+```
+
+Dalším bodem je testování hypotézy shodnosti støedních hodnot. Jedinou podmínkou pouití t-testu je normalita, která je ji otestována.
+Pro faktor Ruka zamítáme nulovou hypotézu shodnosti støedních hodnot mezi všemi úrovnìmi (p-val = 0.97).
+U faktoru Kruh nulovou hypotézu nezamítáme.
+
+
+```{r 3.3 T, include = T}
 #Tukey HSD + Fisher LSD
 #Celkovy aov
 #Kruh bychom ani testovat, protoze jsou ruzne variance ve skupinach 1cm, 3cm, 5cm
 aov_celk =  aov(Pocet ~ Jmeno + Ruka + Kruh, data = dat) #ruka neni stat. vyznamna
 summary(aov_celk)
-LSD1 <- LSD.test(aov_celk, "Jmeno"); #LSD1
-#LSD2 <- LSD.test(aov_celk, "Ruka"); LSD2
-#LSD3 <- LSD.test(aov_celk, "Kruh"); LSD3
+LSD1 <- LSD.test(aov_celk, "Jmeno"); LSD1
+LSD2 <- LSD.test(aov_celk, "Ruka"); LSD2
+LSD3 <- LSD.test(aov_celk, "Kruh"); LSD3
 TukeyHSD(aov_celk, "Jmeno", ordered = FALSE, conf.level = alpha)
-#TukeyHSD(aov_celk, "Ruka", ordered = FALSE, conf.level = alpha)
-#TukeyHSD(aov_celk, "Kruh", ordered = FALSE, conf.level = alpha)
+TukeyHSD(aov_celk, "Ruka", ordered = FALSE, conf.level = alpha)
+TukeyHSD(aov_celk, "Kruh", ordered = FALSE, conf.level = alpha)
 
-#par(mfrow = c(2,3))
-#plot(LSD1)
-#plot(LSD2)
-#plot(LSD3)
-#plot(TukeyHSD(aov_celk, "Jmeno", ordered = FALSE,las=1))
-#plot(TukeyHSD(aov_celk, "Ruka", ordered = FALSE,las=1))
-#plot(TukeyHSD(aov_celk, "Kruh", ordered = FALSE,las=1))
-
-
+par(mfrow = c(2,3))
+plot(LSD1)
+plot(LSD2)
+plot(LSD3)
+plot(TukeyHSD(aov_celk, "Jmeno", ordered = FALSE,las=1))
+plot(TukeyHSD(aov_celk, "Ruka", ordered = FALSE,las=1))
+plot(TukeyHSD(aov_celk, "Kruh", ordered = FALSE,las=1))
 ```
+Fisherùv LSD test vrací pro promìnnou jména least significant difference rovnı 4.6 úrovnì jsou tedy dvì rozdílné skupiny (jejich rozdíl je 5.889).
+LSD pro Ruka je roven 5.65, všechny úrovnì jsou ve stejné skupinì.
+<!-- zahrnout Kruh nebo ne?? -->
+Tukeyho honest significant difference test vrací pro promìnnou Jména p-hodnotu 0.017, nezamítáme tedy hypotézu, e úrovnì mají rùznou støední hodnotu. Tento test na promìnné Ruka vrací p-hodnoty indikující, e všechny úrovnì patøí do stejné skupiny.
+Vısledk je tedy shodnı s pøedchozími testy.
 
-
-## 4.ÄÃ¡st
+## 4.èást
 
 *  Analyzute data pomoci ANOVA (vsechny promenne berte jako faktor)
          - s predpokladem, ze kazdy z ucastniku experimentu tvori jeden blok.
@@ -293,7 +289,96 @@ TukeyHSD(aov_celk, "Jmeno", ordered = FALSE, conf.level = alpha)
          - diskutujte vliv znahodneni experimentu a vyvoj rezidui v case (cislo mereni)
 
 ```{r fourth part T, include = T}
-aov_celk
+summary(aov_celk)
 par(mfrow = c(2,2))
 plot(aov_celk)
 ```
+ANOVA vrací pro faktory Jmeno a Kruh p-hodnoty < 0.05, tzn, mají vliv na promìnnou Poèe, faktor Ruka signifikantní není, proto jej vyhodíme z modelu.
+Residuals vs. Fitted plot ukazuje nìkolik monıch outlierù, které ovlivòují lineární trend u obou koncù køivky.
+Bod è.17 je znaènì vychılenı i u Normálního Q-Q plotu, kde máme zcela zøetelnı lineární trend.
+Scale-Location plot má body víceménì rovnomìrnì rozdìlené a køivka zaujímá horizontální polohu, vypadá to tedy na rovnomìrné rozdìlení reziduí pøes prediktory a homoskedasticitu.
+
+
+<!-- poslednimu bodu nerozumim -->
+
+## 5.èást
+
+* Porovnejte a diskutujte vysledky z bodu 3 a 4.
+
+```{r 5.1 }
+
+```
+Ve tøetím bodu jsme nìkolika testy (Fisher LSD, Tukey HSD, paiwise t-test) urèili, e faktory Ruka a Jména mají úrovnì s rùznımi støedními hodnotami (pocházejí z rùznıch skupin). Jinak to bylo s faktorem Kruh, kde všechny úrovnì patøí do stejné.
+Model ANOVA má u faktorù Jmeno a Kruh p-hodnoty < 0.05, je zde signifikantní rozdíl mezi úrovnìmi. Faktor Kruh, má velmi vysokou p =hodnotu, není signifikantní.
+Závìry se tedy shodují nezávisle na volbì nástroje.
+
+
+## 6. èást
+
+* Pokud data nesplnuji predpoklady pro pouziti ANOVA, diskutujte mozne transformace (logaritmicka, Box-Cox, ...)
+      a duvod proc data predpoklady nesplnuji? Vyskyt outlieru, zpusob mereni, divny operator, ...
+
+```{r 6.1 }
+#log trafo
+aov1 <- aov(Pocet ~ Jmeno + Ruka + Kruh, data = dat); summary(aov1)
+aov2 <- aov(Pocet ~ Jmeno  + Kruh  + Jmeno*Kruh, data = dat)
+aov_trafo <-  aov(log(Pocet) ~ Jmeno  + Kruh  + Jmeno*Kruh, data = dat) #ruka neni stat. vyznamna
+summary(aov_trafo)
+shapiro.test(aov_trafo$residuals)
+require(lmtest)
+bptest(aov_trafo)
+
+#B-C trafo
+require(EnvStats)
+modelBC <- boxcox(aov_celk, objective.name = "PPCC", lambda = seq(0,5, by=0.5)); modelBC 
+ lambda <- cbind(modelBC$lambda,modelBC$objective)
+ lam <- lambda[which.max(lambda[,2]),1];lam
+ modelBC_final <- aov((Pocet)^lam ~ Jmeno + Kruh + Jmeno*Kruh , data = dat);
+ summary(modelBC_final)
+ 
+```
+
+## 7. èást
+
+* Vyberte nejvhodnejsi model a i kdyby nesplnoval predpoklady pro pouziti ANOVA reste nasledujici: 
+   - Spoctete silu testu v ANOVA (pro max. dvoufaktorovou analyzu
+                                  - jeden z faktoru zanedbejte, nebo vezmete mereni pro jednu jeho konkretni uroven)
+   - Predpokladejme, ze standartni odchylka disturbanci bude pro provadeny experiment 4
+     a maximalni (pro nas signifikantni) rozdil, ktery chceme detekovat je 5 bodu v kruhu.
+     Spoctete pocet potrebnych replikaci, aby sila vysledneho testu byla vetsi nez 0.9
+     
+```{r 7.1 }
+# vybirame asi Pocet ~  Jmeno*Kruh
+anova_fin <- aov(Pocet ~ Jmeno*Kruh, data = dat)
+summary(anova_fin)
+shapiro.test(anova_fin$residuals) # OK...zamitame
+leveneTest(anova_fin) #OK....zamitame
+var1 <- var(dat$Pocet[which(dat$Jmeno=="kajetan")])
+var2 <- var(dat$Pocet[which(dat$Jmeno=="adam")])
+mean1 <- mean(dat$Pocet[which(dat$Jmeno=="kajetan")])
+mean2 <- mean(dat$Pocet[which(dat$Jmeno=="adam")])
+
+variances <- c(var1,var2)
+means <- c(mean1, mean2) 
+
+power.anova.test(groups = 2, between.var = var(means), n = length(dat$Pocet[which(dat$Jmeno=="kajetan")]) , sig.level = 0.05, within.var = 16)
+
+# kolik potrebnych replikaci pro power > 0,9
+power.anova.test(groups = 2, between.var = var(means), n = NULL , sig.level = 0.05, within.var = 16, power = 0.9) #alespon 11 replikaci
+
+n <- c(seq(2,10,by=1),seq(12,20,by=2),seq(25,50,by=5))
+pow <- power.anova.test(groups = 2, between.var = var(means), n = n , sig.level = 0.05, within.var = 16)
+plot(n, pow$power)
+
+```
+
+## 8. èást
+
+* Vytvorte regresni model, kde nebudete uvazovat bloky a velikost kruhu bude kvantitativni promenna.
+      - zkuste pridat do modelu i druhou mocninu a porovnejte dva regresni modely mezi s sebou a vyberte vhodnejsi
+      - overte predpoklady pro pouziti vybraneho modelu a vykreslete QQ-plot, residua x fitted values, resida x prumer , ...
+
+```{r 8.1 }
+
+```
+
