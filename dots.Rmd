@@ -348,6 +348,27 @@ modelBC <- boxcox(aov_celk, objective.name = "PPCC", lambda = seq(0,5, by=0.5));
      Spoctete pocet potrebnych replikaci, aby sila vysledneho testu byla vetsi nez 0.9
      
 ```{r 7.1 }
+# vybirame asi Pocet ~  Jmeno*Kruh
+anova_fin <- aov(Pocet ~ Jmeno*Kruh, data = dat)
+summary(anova_fin)
+shapiro.test(anova_fin$residuals) # OK...zamitame
+leveneTest(anova_fin) #OK....zamitame
+var1 <- var(dat$Pocet[which(dat$Jmeno=="kajetan")])
+var2 <- var(dat$Pocet[which(dat$Jmeno=="adam")])
+mean1 <- mean(dat$Pocet[which(dat$Jmeno=="kajetan")])
+mean2 <- mean(dat$Pocet[which(dat$Jmeno=="adam")])
+
+variances <- c(var1,var2)
+means <- c(mean1, mean2) 
+
+power.anova.test(groups = 2, between.var = var(means), n = length(dat$Pocet[which(dat$Jmeno=="kajetan")]) , sig.level = 0.05, within.var = 16)
+
+# kolik potrebnych replikaci pro power > 0,9
+power.anova.test(groups = 2, between.var = var(means), n = NULL , sig.level = 0.05, within.var = 16, power = 0.9) #alespon 11 replikaci
+
+n <- c(seq(2,10,by=1),seq(12,20,by=2),seq(25,50,by=5))
+pow <- power.anova.test(groups = 2, between.var = var(means), n = n , sig.level = 0.05, within.var = 16)
+plot(n, pow$power)
 
 ```
 
