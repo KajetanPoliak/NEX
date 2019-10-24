@@ -205,7 +205,7 @@ dat2 %>%
   ggplot() +
   aes(x = Jmeno, y = grPocet, color = Ruka) +
   geom_line(aes(group = Ruka)) +
-  geom_point()
+  geom_point() + labs(x = "Jméno", y = "Počet") + ggtitle("Influence plot - Počet x Jméno")
 
 dat %>%
   group_by(Jmeno, Kruh) %>% 
@@ -216,10 +216,11 @@ dat3 %>%
   ggplot() +
   aes(x = Jmeno, y = grPocet, color = Kruh) +
   geom_line(aes(group = Kruh)) +
-  geom_point()
+  geom_point() + labs(x = "Kruh", y = "Počet") + ggtitle("Influence plot - Počet x Kruh")
 
 #EFFECT PLOTS
-plot.design(Pocet~Ruka+Kruh+Jmeno+Poradi, data = dat)
+plot.design(Pocet~Ruka+Kruh+Jmeno, data = dat, main = "Effect plot")
+
 
 
 #### 3) ######
@@ -348,6 +349,30 @@ anova(aov_celk3, aov_celk4) # > 0.05, tj. nezamitame a lepsi je model aov_celk3:
 #zde bude problem ta variance u kruhu, 
 #NE! Neni problem; v plotech je to OK a bptest() taky vychazi
 
+#### 7) ######
+
+# vybirame asi Pocet ~  Jmeno*Kruh
+anova_fin <- aov(Pocet ~ Jmeno*Kruh, data = dat)
+summary(anova_fin)
+shapiro.test(anova_fin$residuals) # OK...zamitame
+#leveneTest(anova_fin) #OK....zamitame
+
+mean1 <- mean(dat$Pocet[which(dat$Jmeno=="kajetan")])
+mean2 <- mean(dat$Pocet[which(dat$Jmeno=="adam")])
+means <- c(mean1, mean2) 
+
+power.anova.test(groups = 2, between.var = var(means), n = length(dat$Pocet[which(dat$Jmeno=="kajetan")]) , sig.level = 0.05, within.var = 16)
+
+# kolik potrebnych replikaci pro power > 0,9
+power.anova.test(groups = 2, between.var = var(means), n = NULL , sig.level = 0.05, within.var = 16, power = 0.9) #alespon 11 replikaci
+
+n <- c(seq(2,10,by=1),seq(12,20,by=2),seq(25,50,by=5))
+pow <- power.anova.test(groups = 2, between.var = var(means), n = n , sig.level = 0.05, within.var = 16)
+plot(n, pow$power, xlab = "Počet replikací", ylab = "Síla testu", main = "Síla testu v závislosti na počtu replikací", col= "red", type = "o")
+
+
+
+
 #### 8) ###### 
 dat$Kruh <- as.numeric(dat$Kruh)
 
@@ -356,7 +381,7 @@ summary(linmod)
 
 linmod2 <- lm(Pocet ~ Kruh + I(Kruh^2), data = dat)
 summary(linmod2)#druha mocnina ani neni vyznamna, takze nema smysl dal tento model uvazovat
-
+par(mfrow = c(2,2))
 plot(linmod)
 lillie.test(residuals(linmod))
 shapiro.test(resid(linmod))
