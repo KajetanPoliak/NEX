@@ -317,17 +317,21 @@ Scale-Location plot m? body v?cem?n? rovnom?rn? rozd?len? a k?ivka zauj?m? horiz
 ```{r 5.1 }
 
 ```
-Ve t?et?m bodu jsme n?kolika testy (Fisher LSD, Tukey HSD, paiwise t-test) ur?ili, ?e faktory Ruka a Jm?na maj? ?rovn? s r?zn?mi st?edn?mi hodnotami (poch?zej? z r?zn?ch skupin). Jinak to bylo s faktorem Kruh, kde v?echny ?rovn? pat?? do stejn?.
-Model ANOVA m? u faktor? Jmeno a Kruh p-hodnoty < 0.05, je zde signifikantn? rozd?l mezi ?rovn?mi. Faktor Kruh, m? velmi vysokou p =hodnotu, nen? signifikantn?.
-Z?v?ry se tedy shoduj? nez?visle na volb? n?stroje.
+Ve třetím bodu jsme několika testy (Fisher LSD, Tukey HSD) určili, že faktory Ruka a Jména mají úrovně pocházejí z různých skupin.Jinak to bylo s faktorem Kruh, kde všechny úrovně patří do stejné. Pairwise t-test u faktoru Jméno zamítá shodnost středních hodnot, u faktoru Ruka nikoliv. 
+Model ANOVA má u faktorů Jmeno a Kruh p-hodnoty < 0.05, je zde signifikantní vliv na Pocet. 
+Závěry LSD,HSD testů a ANOVA si tedy odpovídají.
+
+
 
 
 ## 6. ??st
 
 * Pokud data nesplnuji predpoklady pro pouziti ANOVA, diskutujte mozne transformace (logaritmicka, Box-Cox, ...)
       a duvod proc data predpoklady nesplnuji? Vyskyt outlieru, zpusob mereni, divny operator, ...
-
-```{r 6.1 }
+      
+      
+Data splňují předpoklady.
+```{r 6.1, echo=F }
 #log trafo
 aov1 <- aov(Pocet ~ Jmeno + Ruka + Kruh, data = dat); summary(aov1)
 aov2 <- aov(Pocet ~ Jmeno  + Kruh  + Jmeno*Kruh, data = dat)
@@ -339,12 +343,12 @@ bptest(aov_trafo)
 
 #B-C trafo
 require(EnvStats)
-modelBC <- boxcox(aov_celk, objective.name = "PPCC", lambda = seq(0,5, by=0.5)); modelBC 
+modelBC <- boxcox(aov2, objective.name = "PPCC", lambda = seq(0,5, by=0.5)); modelBC 
  lambda <- cbind(modelBC$lambda,modelBC$objective)
  lam <- lambda[which.max(lambda[,2]),1];lam
- modelBC_final <- aov((Pocet)^lam ~ Jmeno + Kruh + Jmeno*Kruh , data = dat);
+ modelBC_final <- aov((Pocet^lam-1)/lam ~ Jmeno + Kruh + Jmeno*Kruh , data = dat);
  summary(modelBC_final)
- 
+ plot(modelBC_final)
 ```
 
 ## 7. ??st
