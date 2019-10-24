@@ -307,6 +307,8 @@ summary(aov_celk)
 par(mfrow = c(2,2))
 plot(aov_celk)
 
+leveneTest(aov_celk)
+
 #bartlett.test(Pocet ~ Jmeno + Kruh, data = dat)
 #bartlett.test(Pocet ~ Kruh, data = dat)
 #bartlett.test(Pocet ~ Ruka, data = dat)
@@ -337,6 +339,7 @@ plot(aov_celk4)
 lillie.test(residuals(aov_celk4))
 shapiro.test(resid(aov_celk4))
 bptest(aov_celk4)
+leveneTest(aov_celk4)
 
 #Porovnat dva nested modely; jeden obsahuje Poradi, druhy ne
 anova(aov_celk3, aov_celk4) # > 0.05, tj. nezamitame a lepsi je model aov_celk3: Pocet ~ Jmeno * Kruh
