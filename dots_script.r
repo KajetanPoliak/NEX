@@ -218,6 +218,16 @@ dat3 %>%
   geom_line(aes(group = Kruh)) +
   geom_point() + labs(x = "Kruh", y = "Počet") + ggtitle("Influence plot - Počet x Kruh")
 
+dat %>% 
+  group_by(Kruh, Ruka) %>%
+  summarise(grPocet = mean(Pocet)) -> dat4
+
+dat4 %>%
+  ggplot() + aes(x = Ruka, y = grPocet, color = Kruh) + 
+  geom_line(aes(group = Kruh)) +
+  geom_point() + labs(x = "Ruka", y = "Počet") + ggtitle("Influence plot - Ruka x Kruh")
+
+
 #EFFECT PLOTS
 plot.design(Pocet~Ruka+Kruh+Jmeno, data = dat, main = "Effect plot")
 
@@ -358,6 +368,7 @@ anova(aov_celk3, aov_celk4) # > 0.05, tj. nezamitame a lepsi je model aov_celk3:
 anova_fin <- aov(Pocet ~ Jmeno*Kruh, data = dat)
 summary(anova_fin)
 shapiro.test(anova_fin$residuals) # OK...zamitame
+bptest(anova_fin)
 #leveneTest(anova_fin) #OK....zamitame
 
 mean1 <- mean(dat$Pocet[which(dat$Jmeno=="kajetan")])
@@ -373,7 +384,13 @@ n <- c(seq(2,10,by=1),seq(12,20,by=2),seq(25,50,by=5))
 pow <- power.anova.test(groups = 2, between.var = var(means), n = n , sig.level = 0.05, within.var = 16)
 plot(n, pow$power, xlab = "Počet replikací", ylab = "Síla testu", main = "Síla testu v závislosti na počtu replikací", col= "red", type = "o")
 
+# Za finální ANOVA model jsme na základě signifikance proměnných a hodnotě R^2 vybrali model Pocet ~ Jmeno*Kruh. Tento model splňuje 
+# podmínky ANOVA. Konkrétně, na základě p-hodnoty Shapirova-Wilkova testu nezamítáme normalitu reziduí na 5% hladině významnosti a 
+# stejně tak na základě Breuschova-Paganova testu nezamítáme homoskedasticitu.
+# Síla testu pro dvouúrovňový faktor Jméno, kde máme 9 pozorování, je 0.834. Pro sílu testu větší než 0.9 bychom potřebovali alespoň 
+# 11 replikací. Tato skute4nost je viditeln0 i z grafu závisloti síly testu na počtu replikací.
 
+ 
 
 
 #### 8) #### 
