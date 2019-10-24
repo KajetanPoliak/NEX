@@ -205,7 +205,7 @@ dat2 %>%
   ggplot() +
   aes(x = Jmeno, y = grPocet, color = Ruka) +
   geom_line(aes(group = Ruka)) +
-  geom_point()
+  geom_point() + labs(x = "Jméno", y = "Počet") + ggtitle("Influence plot - Počet x Jméno")
 
 dat %>%
   group_by(Jmeno, Kruh) %>% 
@@ -216,10 +216,21 @@ dat3 %>%
   ggplot() +
   aes(x = Jmeno, y = grPocet, color = Kruh) +
   geom_line(aes(group = Kruh)) +
-  geom_point()
+  geom_point() + labs(x = "Kruh", y = "Počet") + ggtitle("Influence plot - Počet x Kruh")
+
+dat %>% 
+  group_by(Kruh, Ruka) %>%
+  summarise(grPocet = mean(Pocet)) -> dat4
+
+dat4 %>%
+  ggplot() + aes(x = Ruka, y = grPocet, color = Kruh) + 
+  geom_line(aes(group = Kruh)) +
+  geom_point() + labs(x = "Ruka", y = "Počet") + ggtitle("Influence plot - Ruka x Kruh")
+
 
 #EFFECT PLOTS
-plot.design(Pocet~Ruka+Kruh+Jmeno+Poradi, data = dat)
+plot.design(Pocet~Ruka+Kruh+Jmeno, data = dat, main = "Effect plot")
+
 
 
 #### 3) ######
@@ -351,7 +362,41 @@ anova(aov_celk3, aov_celk4) # > 0.05, tj. nezamitame a lepsi je model aov_celk3:
 #zde bude problem ta variance u kruhu, 
 #NE! Neni problem; v plotech je to OK a bptest() taky vychazi
 
-#### 8) ###### 
+#### 7) ######
+
+# vybirame asi Pocet ~  Jmeno*Kruh
+anova_fin <- aov(Pocet ~ Jmeno*Kruh, data = dat)
+summary(anova_fin)
+shapiro.test(anova_fin$residuals) # OK...zamitame
+bptest(anova_fin)
+#leveneTest(anova_fin) #OK....zamitame
+
+mean1 <- mean(dat$Pocet[which(dat$Jmeno=="kajetan")])
+mean2 <- mean(dat$Pocet[which(dat$Jmeno=="adam")])
+means <- c(mean1, mean2) 
+
+power.anova.test(groups = 2, between.var = var(means), n = length(dat$Pocet[which(dat$Jmeno=="kajetan")]) , sig.level = 0.05, within.var = 16)
+
+# kolik potrebnych replikaci pro power > 0,9
+power.anova.test(groups = 2, between.var = var(means), n = NULL , sig.level = 0.05, within.var = 16, power = 0.9) #alespon 11 replikaci
+
+n <- c(seq(2,10,by=1),seq(12,20,by=2),seq(25,50,by=5))
+pow <- power.anova.test(groups = 2, between.var = var(means), n = n , sig.level = 0.05, within.var = 16)
+plot(n, pow$power, xlab = "Počet replikací", ylab = "Síla testu", main = "Síla testu v závislosti na počtu replikací", col= "red", type = "o")
+
+# Za finální ANOVA model jsme na základě signifikance proměnných a hodnotě R^2 vybrali model Pocet ~ Jmeno*Kruh. Tento model splňuje 
+# podmínky ANOVA. Konkrétně, na základě p-hodnoty Shapirova-Wilkova testu nezamítáme normalitu reziduí na 5% hladině významnosti a 
+# stejně tak na základě Breuschova-Paganova testu nezamítáme homoskedasticitu.
+# Pro výpočet síly testu bereme 5% hladinu významnosti. Předpokládáme, že statistická odchylka disturbancí pro experiment je 4 (rozptyl = 16).
+# Síla testu pro dvouúrovňový faktor Jméno, kde máme 9 pozorování, je 0.834. Pro sílu testu větší než 0.9 bychom potřebovali alespoň 
+# 11 replikací. Tato skute4nost je viditelné i z grafu závisloti síly testu na počtu replikací.
+#
+#
+
+ 
+
+
+#### 8) #### 
 dat$Kruh <- as.numeric(dat$Kruh)
 
 linmod <- lm(Pocet ~ Kruh, data = dat)
@@ -359,7 +404,7 @@ summary(linmod)
 
 linmod2 <- lm(Pocet ~ Kruh + I(Kruh^2), data = dat)
 summary(linmod2)#druha mocnina ani neni vyznamna, takze nema smysl dal tento model uvazovat
-
+par(mfrow = c(2,2))
 plot(linmod)
 lillie.test(residuals(linmod))
 shapiro.test(resid(linmod))
