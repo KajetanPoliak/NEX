@@ -387,8 +387,11 @@ plot(n, pow$power, xlab = "Počet replikací", ylab = "Síla testu", main = "Sí
 # Za finální ANOVA model jsme na základě signifikance proměnných a hodnotě R^2 vybrali model Pocet ~ Jmeno*Kruh. Tento model splňuje 
 # podmínky ANOVA. Konkrétně, na základě p-hodnoty Shapirova-Wilkova testu nezamítáme normalitu reziduí na 5% hladině významnosti a 
 # stejně tak na základě Breuschova-Paganova testu nezamítáme homoskedasticitu.
+# Pro výpočet síly testu bereme 5% hladinu významnosti. Předpokládáme, že statistická odchylka disturbancí pro experiment je 4 (rozptyl = 16).
 # Síla testu pro dvouúrovňový faktor Jméno, kde máme 9 pozorování, je 0.834. Pro sílu testu větší než 0.9 bychom potřebovali alespoň 
-# 11 replikací. Tato skute4nost je viditeln0 i z grafu závisloti síly testu na počtu replikací.
+# 11 replikací. Tato skute4nost je viditelné i z grafu závisloti síly testu na počtu replikací.
+#
+#
 
  
 
