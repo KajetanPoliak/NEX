@@ -373,7 +373,7 @@ plot(n, pow$power, xlab = "Počet replikací", ylab = "Síla testu", main = "Sí
 
 
 
-#### 8) ###### 
+#### 8) #### 
 dat$Kruh <- as.numeric(dat$Kruh)
 
 linmod <- lm(Pocet ~ Kruh, data = dat)
