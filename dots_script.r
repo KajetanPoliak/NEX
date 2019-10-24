@@ -307,6 +307,8 @@ summary(aov_celk)
 par(mfrow = c(2,2))
 plot(aov_celk)
 
+leveneTest(aov_celk)
+
 #bartlett.test(Pocet ~ Jmeno + Kruh, data = dat)
 #bartlett.test(Pocet ~ Kruh, data = dat)
 #bartlett.test(Pocet ~ Ruka, data = dat)
@@ -337,6 +339,7 @@ plot(aov_celk4)
 lillie.test(residuals(aov_celk4))
 shapiro.test(resid(aov_celk4))
 bptest(aov_celk4)
+leveneTest(aov_celk4)
 
 #Porovnat dva nested modely; jeden obsahuje Poradi, druhy ne
 anova(aov_celk3, aov_celk4) # > 0.05, tj. nezamitame a lepsi je model aov_celk3: Pocet ~ Jmeno * Kruh
@@ -357,12 +360,12 @@ summary(linmod)
 linmod2 <- lm(Pocet ~ Kruh + I(Kruh^2), data = dat)
 summary(linmod2)#druha mocnina ani neni vyznamna, takze nema smysl dal tento model uvazovat
 
-#Final model => linmod
 plot(linmod)
 lillie.test(residuals(linmod))
 shapiro.test(resid(linmod))
 bptest(linmod) #bp zamita, mame heteroskedasticitu
 
+#Final model => linmod_log
 linmod_log <- lm(log(Pocet) ~ Kruh, data = dat)
 summary(linmod_log)
 plot(linmod_log)
